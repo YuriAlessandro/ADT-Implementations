@@ -1,7 +1,7 @@
 ## Escreva suas contribuições
 
 ### Gustavo
-- Terminou a parte básica do Vector
+- Terminou o Vector
 - Corrigiu métodos da ForwardList
 ### Yuri
 - Algumas coisas do Vector
@@ -10,19 +10,21 @@
 ## DONE
 - [x] Métodos básicos do Vector
 - [x] Operadores do Vector
-- [ ] Iteradores do Vector
+- [x] Iteradores do Vector
 - [x] Métodos básicos do ForwardList
 - [ ] Operadores do ForwardList
 - [ ] Iteradores do ForwardList
 - [ ] Métodos básicos da List
 - [ ] Operadores da List
-- [ ] Iteradores da Lista 
+- [ ] Iteradores da List
 - [ ] Tirar as coisas do .h
-- [ ] Fazer o esquema do espaço extra
-- [ ] Construtores de cópia e de movimento
+- [ ] Fazer o esquema do espaço extra pro Vector
+- [ ] Construtores cópia e movimento (Vector)
+- [ ] Construtores cópia e movimento (ForwardList)
+- [ ] Construtores cópia e movimento (List)
+
 ## TODO:
+- Testar os construtores cópia e movimento do Vector. 
 
 ## Para os nós mesmos do futuro resolverem
-- Fazer ou não o operador --? (Com classes de tamanho variável como strings não
-dá pra simplesmente fazer um --ponteiro (não testado))
-
+A vida.

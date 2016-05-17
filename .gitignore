@@ -1,2 +1,5 @@
-/bin
-/objs
+ForwardList/bin/
+ForwardList/objs/
+Vector/bin/
+Vector/objs/
+projeto_TAD_Lista.pdf

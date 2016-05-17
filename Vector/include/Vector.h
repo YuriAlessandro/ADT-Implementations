@@ -15,16 +15,11 @@ template <class Object>
 class Vector {
 
 public:
-    // CONSTRUTOR
-    Vector( size_type _newSize = 10 ) : miCapacity (_newSize), miSize( 0 ) {
-        mpArray = std::unique_ptr< Object[] >( new Object[ _newSize ] );
-    }
-
     ////////////////
     // ITERADORES //
     ////////////////
     class const_iterator{
-    friend class Vector;
+        friend class Vector;
     public:
         const_iterator( Object * _new = nullptr ) : m_ptr( _new )
         {}
@@ -49,6 +44,48 @@ public:
 
         Object & operator*();
     };
+    
+    // CONSTRUTORES
+    Vector( size_type _newSize = 10 ) : miCapacity (_newSize), miSize( 0 ) {
+        mpArray = std::unique_ptr<Object[]>( new Object[ _newSize ] );
+    }
+
+    Vector( const Vector & _vec ){
+        miCapacity = _vec.miCapacity;
+        miSize = _vec.miSize;
+        mpArray = std::unique_ptr<Object[]>( new Object[ miCapacity ] );
+
+        for ( auto i = 0; i < miSize; i++ )
+            mpArray[i] = _vec.mpArray[i];
+    }
+
+    Vector( Vector && _vec ){
+        miCapacity = _vec.miCapacity;
+        miSize = _vec.miSize;
+        mpArray = std::move( _vec.mpArray );
+    }
+
+    Vector & operator= ( const Vector & _vec ){
+        if ( this != &_vec )
+        {
+            miCapacity = _vec.miCapacity;
+            miSize = _vec.miSize;
+            mpArray.reset();
+            for ( auto i = 0; i < miSize; i++ )
+                mpArray[i] = _vec.mpArray[i];
+        }
+        return *this;
+    }
+
+    Vector & operator= ( Vector && _vec ){
+        if ( this != &_vec ) //Testar isso
+        {
+            miCapacity = _vec.miCapacity;
+            miSize = _vec.miSize;
+            mpArray = std::move( _vec.mpArray );
+        }
+        return *this;
+    }
 
     //////////////
     // METÓDOS: //
@@ -68,7 +105,6 @@ public:
     const Object & front() const;
     void assign( const Object & x );
 
-
     // Exclusive to dynamic arrays
     Object & operator[]( size_type idx);
     Object & at ( size_type idx );
@@ -79,8 +115,9 @@ public:
     void superDebuggator() const;
 
 
+
 private:
-    std::unique_ptr< Object[] > mpArray;
+    std::unique_ptr<Object[]> mpArray;
     size_type miCapacity;
     size_type miSize;
 };
