@@ -3,7 +3,7 @@
 
 /**
  *  \file Vector.h
- *  \brief
+ *  \brief Vector headers
  */
 
 #include <iostream>
@@ -29,27 +29,13 @@ public:
         const_iterator( Object * _new = nullptr ) : m_ptr( _new )
         {}
 
-        const_iterator operator++(){
-            return m_ptr++;
-        }
-
-        const_iterator operator++(int){
-            return ++m_ptr;
-        }
-
-        // -- Precisaria de uma implementação mais difícil.
-        // void operator--(){}
-        bool operator==( const const_iterator & RHS ) const{
-            return ( * m_ptr == * RHS );
-        }
-
-        bool operator!=( const const_iterator & RHS ) const{
-            return ( * m_ptr != * RHS );
-        }
-
-        const Object & operator*() const{
-            return * m_ptr;
-        }
+        const_iterator & operator++();
+        const_iterator operator++(int);
+        const_iterator & operator--();
+        const_iterator operator--(int);
+        bool operator==( const const_iterator & RHS ) const;
+        bool operator!=( const const_iterator & RHS ) const;
+        const Object & operator*() const{;
 
     protected:
         Object * m_ptr;
@@ -61,36 +47,17 @@ public:
         iterator( Object * _new = nullptr ) : const_iterator( _new )
         {}
 
-        Object & operator*(){
-            return * const_iterator::m_ptr;
-        }
+        Object & operator*();
     };
 
     //////////////
     // METÓDOS: //
     //////////////
 
-    const_iterator cbegin() const{
-        //Object * pointer = m_array[0];
-
-        //Object * pointer;
-        //pointer = &m_array[0];
-
-        return const_iterator( & mpArray[0] ); // return * ou &?
-    }
-
-    const_iterator cend() const{
-        // Deveria ser só miSize
-        return const_iterator( & mpArray[ miSize ] );
-    }
-
-    iterator begin() const{
-        return iterator( & mpArray[0] ); // return * ou &?
-    }
-
-    iterator end() const{
-        return iterator( & mpArray[ miSize ] );
-    }
+    const_iterator cbegin() const;
+    const_iterator cend() const;
+    iterator begin() const;
+    iterator end() const;
 
     size_type size() const;
     void clear();
@@ -104,12 +71,12 @@ public:
 
     // Exclusive to dynamic arrays
     Object & operator[]( size_type idx);
-//    Object & at ( size_type idx )();
+    Object & at ( size_type idx );
     size_type capacity() const;
     void reserve( size_type new_capacity );
 
     Object * data() const;
-    void print() const;
+    void superDebuggator() const;
 
 
 private:
