@@ -35,7 +35,7 @@ public:
         const_iterator operator--(int);
         bool operator==( const const_iterator & RHS ) const;
         bool operator!=( const const_iterator & RHS ) const;
-        const Object & operator*() const{;
+        const Object & operator*() const;
 
     protected:
         Object * m_ptr;

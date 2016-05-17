@@ -93,7 +93,7 @@ void Vector<Object>::reserve( size_type new_capacity ){
 ///////////////////////////////////////////////////////////////////////////////
 
 template <class Object>
-Vector<Object>::const_iterator cbegin() const{
+typename Vector<Object>::const_iterator Vector<Object>::cbegin() const{
     //Object * pointer = m_array[0];
 
     //Object * pointer;
@@ -103,66 +103,66 @@ Vector<Object>::const_iterator cbegin() const{
 }
 
 template <class Object>
-Vector<Object>::const_iterator cend() const{
+const_iterator Vector<Object>::cend() const{
     // Deveria ser só miSize
     return const_iterator( mpArray.get() + miSize );
     //return const_iterator( & mpArray[miSize] );
 }
 
 template <class Object>
-Vector<Object>::iterator begin() const{
+iterator Vector<Object>::begin() const{
     return iterator( mpArray.get() ); // return * ou &?
     //return iterator( & mpArray[0] ); // return * ou &?
 }
 
 template <class Object>
-Vector<Object>::iterator end() const{
+iterator Vector<Object>::end() const{
     return iterator( mpArray.get() + miSize );
     //return iterator( & mpArray[miSize] );
 
 }
 
 template <class Object>
-const_iterator & Vector<Object>::operator++(){
+typename Vector<Object>::const_iterator & typename Vector<Object>::const_iterator::operator++(){
     ++m_ptr;
     return this;
 }
 
 template <class Object>
-const_iterator operator++(int){
+const_iterator typename Vector<Object>::const_iterator::operator++(int){
     const_iterator old( m_ptr++ );
     return old;
 }
 
 template <class Object>
-const_iterator & operator--(){
+const_iterator & typename Vector<Object>::const_iterator::operator--(){
     --m_ptr;
     return this;
 }
 
 template <class Object>
-const_iterator operator--(int){
+const_iterator typename Vector<Object>::const_iterator::operator--(int){
     const_iterator old( m_ptr-- );
     return old;
 }
 
 template <class Object>
-bool operator==( const const_iterator & RHS ) const{
+bool typename Vector<Object>::const_iterator::operator==( const const_iterator & RHS ) const{
     return ( m_ptr == RHS.m_ptr );
 }
 
 template <class Object>
-bool operator!=( const const_iterator & RHS ) const{
+bool typename Vector<Object>::const_iterator::operator!=( const const_iterator & RHS ) const{
     return ( m_ptr != RHS.m_ptr );
 }
 
 template <class Object>
-const Object & operator*() const{
+const Object & typename Vector<Object>::const_iterator::operator*() const{
     return * m_ptr;
 }
 
 template <class Object>
-Object & operator*(){
+Object & typename Vector<Object>::const_iterator::operator*(){
     return * const_iterator::m_ptr;
 }
 
