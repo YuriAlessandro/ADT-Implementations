@@ -12,135 +12,146 @@
 
 template<class Object>
 ForwardList<Object>::ForwardList(){
-    mpHead = nullptr;
+    mpTail = new SLLNode( Object(), nullptr );
+    mpHead = new SLLNode( Object(), mpTail );
+    miSize = 0;
 }
 
 template<class Object>
 ForwardList<Object>::~ForwardList(){
     clear();
+    delete mpHead;
+    delete mpTail;
 }
 
 template<class Object>
 size_type ForwardList<Object>::size() const{
-    SLLNode * work = mpHead;
-    size_type l = 0;
-    while ( work != nullptr){
-        l++;
-        work = work->mpNext;
-    }
-    return l;
+    return miSize;
 }
 
 // Clear tem que dar ~Object()
 template<class Object>
 void ForwardList<Object>::clear(){
-    if( mpHead != nullptr){
-        SLLNode * work;
-        while ( mpHead != nullptr){
-            mpHead->miData.~Object();
+    SLLNode * work;
+    while ( mpHead->mpNext != mpTail ){
+        mpHead->mpNext->miData.~Object();
 
-            work = mpHead->mpNext;
-            delete mpHead;
-            mpHead = work;
-        }
+        work = mpHead->mpNext->mpNext;
+        delete mpHead->mpNext;
+        mpHead->mpNext = work;
     }
+    
+    miSize = 0;
 }
 
 template<class Object>
-bool ForwardList<Object>::empty(){
-    return ( mpHead == nullptr );
+bool ForwardList<Object>::empty() const{
+    return ( mpHead->mpNext == mpTail );
 }
 
 template<class Object>
 void ForwardList<Object>::push_back( const Object & _x ){
-    if ( mpHead == nullptr ) push_front( _x );
-    else{
-        SLLNode * tmp;
-        try{
-            tmp = new SLLNode;
-        }catch(const std::bad_alloc & e){
-            throw e;
-        }
-        tmp->miData = _x;
-        tmp->mpNext = nullptr;
-
-        SLLNode * tail = mpHead;
-
-        while( tail->mpNext != nullptr )
-            tail = tail->mpNext;
-
-        tail->mpNext = tmp;
+    SLLNode * tmp;
+    
+    try{
+        tmp = new SLLNode( _x, mpTail );
+    }catch(const std::bad_alloc & e){
+        throw e;
     }
+
+    SLLNode * _tail = mpHead;
+
+    while( _tail->mpNext != mpTail )
+        _tail = _tail->mpNext;
+
+    _tail->mpNext = tmp;
+    
+    miSize++;
 }
 
 // Tem que dar ~Object()
 template<class Object>
 void ForwardList<Object>::pop_back(){
-    if( mpHead == nullptr ){
+    if( empty() )
         throw std::out_of_range("Não tem nada pra popbackar aqui.");
-    }else{
-        SLLNode * work = nullptr;
-        SLLNode * tail = mpHead;
+    else{
+        SLLNode * work = mpHead;
+        SLLNode * _tail = mpHead->mpNext;
 
-        while( tail->mpNext != nullptr ){
+        while( _tail->mpNext != mpTail ){
             work = work->mpNext;
-            tail = tail->mpNext;
+            _tail = _tail->mpNext;
         }
 
-        tail->miData.~Object();
-        delete tail;
-
-        if ( work == nullptr )  // work não mudou, logo só havia um elemento
-            mpHead = nullptr;
-        else                    // work mudou, então só precisa mudar o penúltimo
-            work->mpNext = nullptr;
-
+        _tail->miData.~Object();
+        delete _tail;
+        work->mpNext = mpTail;
     }
+    
+    miSize--;
+}
+
+template<class Object>
+const Object & ForwardList<Object>::front() const{
+    if ( empty() ){
+        throw std::out_of_range("[front]: Nem sei se é esse erro");
+    }
+    return mpHead->mpNext->miData;
 }
 
 // O retorno está diferente aqui.
 template<class Object>
 const Object & ForwardList<Object>::back() const{
-    SLLNode * tail;
-
-    if ( tail == nullptr )
+    if ( empty() )
         throw std::out_of_range("Nem sei se é esse erro");
 
-    while( tail->mpNext != nullptr )
-        tail = tail->mpNext;
+    SLLNode * _tail = mpHead->mpNext;
 
-    return tail->miData;
+    while( _tail->mpNext != mpTail )
+        _tail = _tail->mpNext;
+
+    return _tail->miData;
 }
 
 template<class Object>
-void ForwardList<Object>::assign( const Object & x ){
-
+void ForwardList<Object>::assign( const Object & _x ){
+    SLLNode * work = mpHead->mpNext;
+    while( work != mpTail ){
+        work->miData.~Object();
+        work->miData = _x;
+        work = work->mpNext;
+    }
 }
 
 // Funções exclusivas à implementação de listas encadeadas
 template<class Object>
 void ForwardList<Object>::push_front( const Object & _x ){
     SLLNode * work = nullptr;
+    
     try{
-        work = new SLLNode;
+        work = new SLLNode( _x, mpHead->mpNext );
     }catch (const std::bad_alloc & e){
         throw e;
     }
-    work->miData = _x;
-    work->mpNext = mpHead;
-    mpHead = work;
+    
+    mpHead->mpNext = work;
+    
+    miSize++;
 }
 
 // Destroy ~Object()
 template<class Object>
 void ForwardList<Object>::pop_front(){
-    if( mpHead == nullptr )
-        throw std::out_of_range("Nao sei se é esse erro");
-
-	SLLNode * work = mpHead->mpNext;
-
-    mpHead->miData.~Object();
-    delete mpHead;
-
-    mpHead = work;
+    if( empty() )
+        throw std::out_of_range("[pop_front]: Nothing to pop here, sir.");
+    else{
+    	SLLNode * work = mpHead->mpNext->mpNext;
+    
+        mpHead->mpNext->miData.~Object();
+        delete mpHead->mpNext;
+    
+        mpHead = work;
+    }
+    
+    miSize--;
 }

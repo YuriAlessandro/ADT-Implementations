@@ -37,9 +37,10 @@ public:
 
     size_type size() const;
     void clear();
-    bool empty();
+    bool empty() const;
     void push_back( const Object & x );
     void pop_back();
+    const Object & front() const;
     const Object & back() const;
     void assign( const Object & x );
 
@@ -49,6 +50,8 @@ public:
 
 private:
     SLLNode * mpHead;
+    SLLNode * mpTail;
+    size_type miSize;
 };
 
 #include "ForwardList.inl"

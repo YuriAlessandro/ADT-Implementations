@@ -1,31 +1,51 @@
+#ifndef _LIST_H_
+#define _LIST_H_
+
 #include <iostream>
+
+using size_type = int;
 
 template <class Object>
 class List{
 public:
-    // Constructors:
-    virtual List() = 0;
     
+    // Constructors:
+    List();
     
     // Destructors:
-    virtual ~List() = 0;
+    ~List();
 
     // Methods:
-    virtual size_type size() const = 0;
-    virtual void clear() = 0;
-    virtual bool empty() = 0;
-    virtual void push_back( const T & x ) = 0;
-    virtual void pop_back() = 0;
-    virtual const T & back() const = 0;
-    virtual const T & front() const = 0;
-    virtual void assign( const T & x ) = 0;
+    size_type size() const;
+    void clear();
+    bool empty() const;
+    void push_back( const Object & x );
+    void pop_back();
+    const Object & back() const;
+    const Object & front() const;
+    void assign( const Object & x );
     
     
     // Exclusive to linked lists:
-    virtual void push_front( const T & x ) = 0;
-    virtual void pop_front() = 0;
+    void push_front( const Object & x );
+    void pop_front();
     
 private:
-    /* Empty */
-
+    struct SLLNode {
+	    Object miData;
+	    SLLNode *mpNext;
+	    SLLNode *mpBefore;
+	    
+	    SLLNode( const Object & d = Object(), SLLNode * n = nullptr, SLLNode * b = nullptr )
+        : miData( d ), mpNext( n ), mpBefore( b )
+        { /* Empty */ }
+	};
+	
+	SLLNode *mpHead;
+	SLLNode *mpTail;
+	size_type miSize;
 };
+
+#include "list.inl"
+
+#endif
