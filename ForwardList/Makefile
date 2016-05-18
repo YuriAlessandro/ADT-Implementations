@@ -33,6 +33,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 
 $(TARGET): $(OBJS)
 	@echo "Compilando..."
+	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^
 
 clean:

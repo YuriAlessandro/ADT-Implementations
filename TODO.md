@@ -22,9 +22,11 @@
 - [ ] Construtores cópia e movimento (Vector)
 - [ ] Construtores cópia e movimento (ForwardList)
 - [ ] Construtores cópia e movimento (List)
+- [ ] Verificar como é o construtor padrão do ForwardList
+- [ ] Comentar tudo
 
 ## TODO:
-- Testar os construtores cópia e movimento do Vector. 
+- Testar os construtores cópia e movimento do Vector.
 
 ## Para os nós mesmos do futuro resolverem
 A vida.

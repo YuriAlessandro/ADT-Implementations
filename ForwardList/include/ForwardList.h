@@ -10,33 +10,47 @@
  *  File with the Forward List header
  */
 
-#include "ForwardList.inl"
+#ifndef _FORWARDLIST_H_
+#define _FORWARDLIST_H_
+
+#include <iostream>
+#include <stdexcept>
 
 using size_type = int;
 
 template <class Object>
 class ForwardList {
-private:
+
+public:
     struct SLLNode {
         Object miData;
         SLLNode * mpNext;
-    };
-    
-    SLLNode * mpHead;
 
-public:
+        SLLNode( const Object & d = Object(), SLLNode * n = nullptr )
+        : miData( d ), mpNext( n )
+        { /* Empty */ }
+    };
+
+
     ForwardList();
     ~ForwardList();
-    
+
     size_type size() const;
     void clear();
     bool empty();
-    void push_back( const T & x );
+    void push_back( const Object & x );
     void pop_back();
-    const T & back() const;
-    void assign( const T & x );
-    
+    const Object & back() const;
+    void assign( const Object & x );
+
     // Funções exclusivas à implementação de listas encadeadas
-    void push_front( const T & x );
+    void push_front( const Object & x );
     void pop_front();
-}
+
+private:
+    SLLNode * mpHead;
+};
+
+#include "ForwardList.inl"
+
+#endif
