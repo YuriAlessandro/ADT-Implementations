@@ -19,15 +19,15 @@
 - [ ] Iteradores da List
 - [ ] Tirar as coisas do .h
 - [ ] Fazer o esquema do espaço extra pro Vector
-- [ ] Construtores cópia e movimento (Vector)
+- [x] Construtores cópia e movimento (Vector)
 - [ ] Construtores cópia e movimento (ForwardList)
 - [ ] Construtores cópia e movimento (List)
 - [ ] Verificar como é o construtor padrão do ForwardList
 - [ ] Comentar tudo
 
 ## TODO:
-- Testar os construtores cópia e movimento do Vector.
-- Refazer os iteradores do Vector.
+- [x] Testar os construtores cópia e movimento do Vector.
+- [x] Refazer os iteradores do Vector.
 
 ## Para os nós mesmos do futuro resolverem
 A vida.

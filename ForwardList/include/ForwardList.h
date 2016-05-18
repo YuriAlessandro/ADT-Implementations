@@ -50,7 +50,7 @@ public:
     protected:
         SLLNode *current;
         const_iterator( SLLNode * p ) : current( p );
-        friend class List<Object>;
+        friend class ForwardList<Object>;
     };
     
     class iterator{
@@ -67,7 +67,7 @@ public:
         */
     protected:
         iterator( SLLNode *p ) : const_iterator( p );
-        friend class List<Object>;
+        friend class ForwardList<Object>;
     };
 
     size_type size() const;

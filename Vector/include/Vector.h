@@ -19,10 +19,8 @@ public:
     // ITERADORES //
     ////////////////
     class const_iterator{
-        friend class Vector;
     public:
-        const_iterator( Object * _new = nullptr ) : m_ptr( _new )
-        {}
+        const_iterator(){/* Empty */}
 
         const_iterator & operator++();
         const_iterator operator++(int);
@@ -34,15 +32,23 @@ public:
 
     protected:
         Object * m_ptr;
+        const_iterator( Object * _new = nullptr ) : m_ptr( _new ){/* Empty */}
+        friend class Vector;
 
     };
 
     class iterator : public const_iterator{
     public:
-        iterator( Object * _new = nullptr ) : const_iterator( _new )
-        {}
+        iterator( ) : const_iterator( ) {/* Empty */}
 
+        iterator & operator++();
+        iterator operator++(int);
+        iterator & operator--();
+        iterator operator--(int);
         Object & operator*();
+    protected:
+        iterator( Object * _new ) : const_iterator( _new ){/* Empty */}
+        friend class Vector<Object>;
     };
     
     // CONSTRUTORES
@@ -78,7 +84,7 @@ public:
     }
 
     Vector & operator= ( Vector && _vec ){
-        if ( this != &_vec ) //Testar isso
+        if ( this != &_vec )
         {
             miCapacity = _vec.miCapacity;
             miSize = _vec.miSize;

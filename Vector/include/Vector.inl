@@ -94,29 +94,28 @@ void Vector<Object>::reserve( size_type new_capacity ){
 
 template <class Object>
 typename Vector<Object>::const_iterator Vector<Object>::cbegin() const{
-    //Object * pointer = m_array[0];
-
-    //Object * pointer;
-    //pointer = &m_array[0];
-    return const_iterator( mpArray.get() ); // return * ou &?
+    
+    return const_iterator( mpArray.get() );
     //return const_iterator( & mpArray[0] );
 }
 
 template <class Object>
 typename Vector<Object>::const_iterator Vector<Object>::cend() const{
-    // Deveria ser só miSize
+
     return const_iterator( mpArray.get() + miSize );
     //return const_iterator( & mpArray[miSize] );
 }
 
 template <class Object>
 typename Vector<Object>::iterator Vector<Object>::begin() const{
+    
     return iterator( mpArray.get() ); // return * ou &?
     //return iterator( & mpArray[0] ); // return * ou &?
 }
 
 template <class Object>
 typename Vector<Object>::iterator Vector<Object>::end() const{
+    
     return iterator( mpArray.get() + miSize );
     //return iterator( & mpArray[miSize] );
 
@@ -158,7 +157,31 @@ bool Vector<Object>::const_iterator::operator!=( const typename Vector<Object>::
 
 template <class Object>
 const Object & Vector<Object>::const_iterator::operator*() const{
-    return * m_ptr;
+    return * const_iterator::m_ptr;
+}
+
+template <class Object>
+typename Vector<Object>::iterator & Vector<Object>::iterator::operator++(){
+    ++iterator::m_ptr;
+    return *this;
+}
+
+template <class Object>
+typename Vector<Object>::iterator Vector<Object>::iterator::operator++(int){
+    iterator old( const_iterator::m_ptr++ );
+    return old;
+}
+
+template <class Object>
+typename Vector<Object>::iterator & Vector<Object>::iterator::operator--(){
+    --iterator::m_ptr;
+    return *this;
+}
+
+template <class Object>
+typename Vector<Object>::iterator Vector<Object>::iterator::operator--(int){
+    iterator old( const_iterator::m_ptr-- );
+    return old;
 }
 
 template <class Object>
