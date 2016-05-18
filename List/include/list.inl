@@ -16,6 +16,8 @@ List<Object>::List(){
 template<class Object>
 List<Object>::~List(){
     clear();
+    delete mpHead;
+    delete mpTail;
 }
  
 template<class Object>
@@ -127,3 +129,40 @@ void List<Object>::pop_front() {
     
     miSize--;
 }
+
+// ITERADORES, precisa arrumar o "CHAMA" deles
+template<class Object>
+const Object & operator*() const{
+    
+}
+
+template<class Object>
+const_iterator & operator++(){
+    
+}
+
+template<class Object>
+const_iterator operator++( int ){
+    
+}
+
+template<class Object>
+const_iterator & operator--(){
+    
+}
+
+template<class Object>
+const_iterator operator --( int ){
+    
+}
+
+template<class Object>
+bool operator==( const const_iterator & rhs ) const{
+    
+}
+
+template<class Object>
+bool operator!=( const const_iterator & rhs ) const{
+    
+}
+

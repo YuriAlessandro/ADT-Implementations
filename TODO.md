@@ -10,11 +10,11 @@
 ## DONE
 - [x] Métodos básicos do Vector
 - [x] Operadores do Vector
-- [x] Iteradores do Vector
+- [ ] Iteradores do Vector
 - [x] Métodos básicos do ForwardList
 - [ ] Operadores do ForwardList
 - [ ] Iteradores do ForwardList
-- [ ] Métodos básicos da List
+- [x] Métodos básicos da List
 - [ ] Operadores da List
 - [ ] Iteradores da List
 - [ ] Tirar as coisas do .h
@@ -27,6 +27,7 @@
 
 ## TODO:
 - Testar os construtores cópia e movimento do Vector.
+- Refazer os iteradores do Vector.
 
 ## Para os nós mesmos do futuro resolverem
 A vida.

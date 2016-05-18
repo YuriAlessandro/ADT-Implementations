@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
     //pop_front method test;
     list1.pop_front();
     assert( list1.front() == 1 );
-    
+
     //pop_back method test;
     list1.pop_back();
     assert( list1.back() == 6 );

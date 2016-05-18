@@ -150,7 +150,7 @@ void ForwardList<Object>::pop_front(){
         mpHead->mpNext->miData.~Object();
         delete mpHead->mpNext;
     
-        mpHead = work;
+        mpHead->mpNext = work;
     }
     
     miSize--;
