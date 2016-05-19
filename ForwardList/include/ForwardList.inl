@@ -98,7 +98,6 @@ const Object & ForwardList<Object>::front() const{
     return mpHead->mpNext->miData;
 }
 
-// O retorno está diferente aqui.
 template<class Object>
 const Object & ForwardList<Object>::back() const{
     if ( empty() )
@@ -122,7 +121,6 @@ void ForwardList<Object>::assign( const Object & _x ){
     }
 }
 
-// Funções exclusivas à implementação de listas encadeadas
 template<class Object>
 void ForwardList<Object>::push_front( const Object & _x ){
     SLLNode * work = nullptr;
@@ -188,38 +186,145 @@ typename ForwardList<Object>::const_iterator ForwardList<Object>::cend( ) const{
 ////////////////////////
 ////////////////////////
 
+template<class Object>
 typename ForwardList<Object>::iterator ForwardList<Object>::insert_after(
     typename ForwardList<Object>::const_iterator itr, const Object & _x ){
         // itr.current =~ mpHead + ?
         SLLNode * work;
         try{
             work = new SLLNode( _x, itr.current->mpNext );
-        }catch( const bad_alloc & e ){
+        }catch( const std::bad_alloc & e ){
             throw e;
         }
 
-        itr->mpNext = work;
-
+        itr.current->mpNext = work;
+        
+        miSize++;
+        
         return iterator( work );
 }
 
-/*
+template<class Object>
 typename ForwardList<Object>::iterator ForwardList<Object>::insert_after(
     typename ForwardList<Object>::const_iterator pos, std::initializer_list<Object> ilist ){
+    
+    SLLNode * work;
 
+    for ( auto element : ilist ) {
+        
+        try{
+            work = new SLLNode( element, pos.current->mpNext );
+        }catch( const std::bad_alloc & e ){
+            throw e;
+        }
+        
+        pos.current->mpNext = work;
+        pos.current = work;
+        
+        miSize++;
+        
+    }
+    
+    return iterator( work );
 }
 
+template<class Object>
 typename ForwardList<Object>::iterator ForwardList<Object>::erase_after(
     typename ForwardList<Object>::const_iterator itr ){
-
+    
+    SLLNode * work = itr.current->mpNext;
+    itr.current->mpNext = work->mpNext;
+    work->miData.~Object();
+    delete work;
+    
+    miSize--;
+    
+    return iterator( itr.current->mpNext );
 }
 
+template<class Object>
 typename ForwardList<Object>::iterator ForwardList<Object>::erase_after(
     typename ForwardList<Object>::const_iterator first, typename ForwardList<Object>::const_iterator last ){
+    
+    SLLNode * work;
+    
+    while( first.current->mpNext != last.current ){
+        work = first.current->mpNext;
 
+        first.current->mpNext = work->mpNext;
+        
+        work->miData.~Object();
+        delete work;
+        
+        miSize--;
+    }
+
+    return iterator( last.current );
 }
 
+template<class Object>
 typename ForwardList<Object>::const_iterator ForwardList<Object>::find(const Object & _x )const{
-
+    
+    const_iterator work = cbegin();
+    
+    while( work.current->mpNext->miData != _x and work != mpTail )
+        work++;
+        
+    return work;
 }
-*/
+
+////////////////
+// ITERADORES //
+////////////////
+
+template<class Object>
+const Object & ForwardList<Object>::const_iterator::operator*() const{
+    return current->miData;
+}
+
+// Tratamento de erro necessário?
+template<class Object>
+typename ForwardList<Object>::const_iterator & ForwardList<Object>::const_iterator::operator++(){
+    current = current->mpNext;
+    return *this;
+}
+
+template<class Object>
+typename ForwardList<Object>::const_iterator ForwardList<Object>::const_iterator::operator++( int ){
+    const_iterator ret( current );
+    current = current->mpNext;
+    return ret;
+}
+
+template<class Object>
+bool ForwardList<Object>::const_iterator::operator==( const typename ForwardList<Object>::const_iterator & rhs ) const{
+    return ( current == rhs.current );
+}
+
+template<class Object>
+bool ForwardList<Object>::const_iterator::operator!=( const typename ForwardList<Object>::const_iterator & rhs ) const{
+    return ( current != rhs.current );
+}
+
+template<class Object>
+const Object & ForwardList<Object>::iterator::operator*() const{
+    return const_iterator::current->miData;
+}
+
+template<class Object>
+Object & ForwardList<Object>::iterator::operator*(){
+    return const_iterator::current->miData;
+}
+
+template<class Object>
+typename ForwardList<Object>::iterator & ForwardList<Object>::iterator::operator++(){
+    iterator::current = iterator::current->mpNext;
+    return *this;
+}
+
+template<class Object>
+typename ForwardList<Object>::iterator ForwardList<Object>::iterator::operator++( int ){
+    iterator ret( const_iterator::current );
+    const_iterator::current = const_iterator::current->mpNext;
+    return ret;
+}

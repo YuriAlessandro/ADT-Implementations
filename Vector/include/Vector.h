@@ -6,7 +6,6 @@
  *  \brief Vector headers
  */
 
-#include <iostream>
 #include <memory>
 
 using size_type = int;

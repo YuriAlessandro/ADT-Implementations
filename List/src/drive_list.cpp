@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include "list.h"
+#include "List.h"
 
 int main(){
     
@@ -54,13 +54,59 @@ int main(){
     //size method test_5:
     std::cout << "Current size: " << list1.size() << std::endl;
     
-    //clear method test
+    //basic iterator test:
+    std::cout << "Printing list with only 10's: " << std::endl;
+    std::cout << "[ ";
+    for ( auto var : list1 )
+        std::cout << var << " ";
+    std::cout << "]\n";
+
+    //clear method test:
     list1.clear();
     assert( list1.empty() );
+    
+    list1.push_front( 4 );
+    assert( list1.front() == 4 );
+
+    list1.push_front( 3 );
+    assert( list1.front() == 3 );
+
+    list1.push_front( 1 );
+    assert( list1.front() == 1 );
+
+    list1.push_front( 0 );
+    assert( list1.front() == 0 );
+    
+    List<int>::iterator position = list1.begin();
+    position++;
+    
+    // Teste insert_1:
+    list1.insert( position, 2 );
+    
+    std::cout << "After inserting 2 before the second position: " << std::endl;
+    std::cout << "[ ";
+    for ( auto var : list1 )
+        std::cout << var << " ";
+    std::cout << "]\n";
+    
+    position--;
+    assert( *position == 2 );
+    
+    // Teste erase:
+    position++;
+    list1.erase(position);
+    
+    std::cout << "After removing 1 from the second position: " << std::endl;
+    std::cout << "[ ";
+    for ( auto var : list1 )
+        std::cout << var << " ";
+    std::cout << "]\n";
+    
+    list1.clear();
     
     //size method test_6:
     std::cout << "Current size: " << list1.size() << std::endl;
     
-    // TESTE NO VALGRIND DEPOIS
+    return 0;
     return EXIT_SUCCESS;
 }

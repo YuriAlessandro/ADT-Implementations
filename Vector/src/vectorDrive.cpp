@@ -112,6 +112,11 @@ int main(int argc, char const *argv[]) {
 
     // Unity test #9: size() after clear
     assert(v1.size() == 0);
+    
+    std::initializer_list<int> asd = {0, 1, 2, 3};
+    for ( auto var : asd ){
+        std::cout << var << std::endl;
+    }
 
     // Exit message
     std::cout << ">>> Exiting with sucess...\n";
