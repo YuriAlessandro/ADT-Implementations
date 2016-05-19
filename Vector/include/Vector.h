@@ -45,12 +45,13 @@ public:
         iterator operator++(int);
         iterator & operator--();
         iterator operator--(int);
+        const Object & operator*() const;
         Object & operator*();
     protected:
         iterator( Object * _new ) : const_iterator( _new ){/* Empty */}
         friend class Vector<Object>;
     };
-    
+
     // CONSTRUTORES
     Vector( size_type _newSize = 10 ) : miCapacity (_newSize), miSize( 0 ) {
         mpArray = std::unique_ptr<Object[]>( new Object[ _newSize ] );

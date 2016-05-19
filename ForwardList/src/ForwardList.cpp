@@ -1,5 +1,5 @@
 /*!
- *  @mainpage Vector
+ *  @mainpage ForwardList
  *  @author Gustavo Araújo e Yuri Alessandro Martins
  *  @copyright Copyright &copy; 2016. All rights reserved.
  *  @version 1.0
@@ -18,31 +18,25 @@
 int main(int argc, char* argv[])
 {
     ForwardList<int> list1;
-    
+
     //push_front method test:
     std::cout << "Current size: " << list1.size() << std::endl;
-    
+
     list1.push_front( 3 );
     assert( list1.front() == 3 );
-    
-    std::cout << "Current size: " << list1.size() << std::endl;
 
     list1.push_front( 2 );
     assert( list1.front() == 2 );
 
-    std::cout << "Current size: " << list1.size() << std::endl;
-
     list1.push_front( 1 );
     assert( list1.front() == 1 );
 
-    std::cout << "Current size: " << list1.size() << std::endl;
-
     list1.push_front( 0 );
     assert( list1.front() == 0 );
-    
+
     //size method test_1:
     std::cout << "Current size: " << list1.size() << std::endl;
-    
+
     //push_back method test:
     list1.push_back( 4 );
     assert( list1.back() == 4 );
@@ -52,8 +46,8 @@ int main(int argc, char* argv[])
     assert( list1.back() == 6 );
     list1.push_back( 7 );
     assert( list1.back() == 7 );
-    
-    //size method test_1:
+
+    //size method test_2:
     std::cout << "Current size: " << list1.size() << std::endl;
 
     //pop_front method test;
@@ -63,12 +57,21 @@ int main(int argc, char* argv[])
     //pop_back method test;
     list1.pop_back();
     assert( list1.back() == 6 );
-    
+
+    //size method test_3:
+    std::cout << "Current size: " << list1.size() << std::endl;
+
     //assign method test
     list1.assign( 10 );
     assert( list1.back() == 10 );
     assert( list1.front() == 10 );
-    
+
+    //basic iterator test
+    std::cout << "[ ";
+    for ( auto var : list1 )
+        std::cout << var << " ";
+    std::cout << "]\n";
+
     //clear method test
     list1.clear();
     assert( list1.empty() );

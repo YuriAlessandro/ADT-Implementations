@@ -5,10 +5,10 @@ template<class Object>
 List<Object>::List(){
     mpHead = new SLLNode();
     mpTail = new SLLNode();
-    
+
     mpHead->mpNext = mpTail;
     mpTail->mpBefore = mpHead;
-    
+
     //TA DANDO FORA DO ESCOPO
     miSize = 0;
 }
@@ -19,7 +19,7 @@ List<Object>::~List(){
     delete mpHead;
     delete mpTail;
 }
- 
+
 template<class Object>
 size_type List<Object>::size() const{
     return miSize;
@@ -37,7 +37,7 @@ void List<Object>::clear(){
     }
     miSize = 0;
 }
-    
+
 template<class Object>
 bool List<Object>::empty() const{
     return ( mpHead->mpNext == mpTail );
@@ -52,7 +52,7 @@ void List<Object>::push_back( const Object & x ){
     }catch (const std::bad_alloc & e){
         throw e;
     }
-    
+
     mpTail->mpBefore->mpNext = tmp;
     mpTail->mpBefore = tmp;
     miSize++;
@@ -63,11 +63,11 @@ template<class Object>
 void List<Object>::pop_back(){
     if ( empty() )
         throw std::out_of_range("Nem sei se é esse erro");
-    else{    
+    else{
         SLLNode * work = mpTail->mpBefore;
         mpTail->mpBefore = mpTail->mpBefore->mpBefore;  // CERTO
         work->mpBefore->mpNext = mpTail;                // CERTO
-        
+
         work->miData.~Object();
         delete work;
     }
@@ -78,7 +78,7 @@ template<class Object>
 const Object & List<Object>::back() const{
     if ( empty() )
         throw std::out_of_range("Nem sei se é esse erro");
-    else    
+    else
         return mpTail->mpBefore->miData;
 }
 
@@ -114,7 +114,7 @@ void List<Object>::push_front( const Object & x ) {
     }
     mpHead->mpNext = tmp;
     tmp->mpNext->mpBefore = tmp;
-    
+
     miSize++;
 }
 
@@ -123,46 +123,150 @@ void List<Object>::pop_front() {
     SLLNode * work = mpHead->mpNext;
     mpHead->mpNext = work->mpNext;
     work->mpNext->mpBefore = mpHead;
-    
+
     work->miData.~Object();
     delete work;
-    
+
     miSize--;
 }
 
 // ITERADORES, precisa arrumar o "CHAMA" deles
 template<class Object>
 const Object & operator*() const{
-    
+
 }
 
 template<class Object>
 const_iterator & operator++(){
-    
+
 }
 
 template<class Object>
 const_iterator operator++( int ){
-    
+
 }
 
 template<class Object>
 const_iterator & operator--(){
-    
+
 }
 
 template<class Object>
 const_iterator operator --( int ){
-    
+
 }
 
 template<class Object>
 bool operator==( const const_iterator & rhs ) const{
-    
+
 }
 
 template<class Object>
 bool operator!=( const const_iterator & rhs ) const{
+
+}
+
+/////////////////////////////////////////
+/////////////////////////////////////////
+/////////////////////////////////////////
+/////////////////////////////////////////
+
+/*
+template<class Object>
+typename ForwardList<Object>::iterator ForwardList<Object>::insert(
+    typename ForwardList<Object>::iterator pos, const Object & _x ){
     
 }
 
+template <class Object>
+template <typename InItr>
+typename ForwardList<Object>::iterator ForwardList<Object>::insert(
+    typename ForwardList<Object>::iterator pos, InItr first, InItr last ){
+
+}
+
+template <class Object>
+typename ForwardList<Object>::iterator ForwardList<Object>::insert(
+    typename ForwardList<Object>::const_iterator pos, std::initializer_list<T> ilist ){
+
+}
+
+template <class Object>
+typename ForwardList<Object>::iterator ForwardList<Object>::erase(
+    typename ForwardList<Object>::iterator pos ){
+
+}
+
+template <class Object>
+typename ForwardList<Object>::iterator ForwardList<Object>::erase(
+    typename ForwardList<Object>::iterator first, typename ForwardList<Object>::iterator last ){
+
+}
+
+template <class Object>
+template <typename InItr>
+void ForwardList<Object>::assign( InItr first, InItr last ){
+
+}
+
+template <class Object>
+void ForwardList<Object>::assign( std::initializer_list<T> ilist ){
+
+}
+
+////////////////
+// ITERADORES //
+////////////////
+
+template<class Object>
+const Object & ForwardList<Object>::const_iterator::operator*() const{
+    return current->miData;
+}
+
+// Tratamento de erro necessário?
+template<class Object>
+typename ForwardList<Object>::const_iterator & ForwardList<Object>::const_iterator::operator++(){
+    current = current->mpNext;
+    return *this;
+}
+
+template<class Object>
+typename ForwardList<Object>::const_iterator ForwardList<Object>::const_iterator::operator++( int ){
+    const_iterator ret( current );
+    current = current->mpNext;
+    return ret;
+}
+
+template<class Object>
+bool ForwardList<Object>::const_iterator::operator==( const typename ForwardList<Object>::const_iterator & rhs ) const{
+    return ( current == rhs.current );
+}
+
+template<class Object>
+bool ForwardList<Object>::const_iterator::operator!=( const typename ForwardList<Object>::const_iterator & rhs ) const{
+    return ( current != rhs.current );
+}
+
+template<class Object>
+const Object & ForwardList<Object>::iterator::operator*() const{
+    return const_iterator::current->miData;
+}
+
+template<class Object>
+Object & ForwardList<Object>::iterator::operator*(){
+    return const_iterator::current->miData;
+}
+
+template<class Object>
+typename ForwardList<Object>::iterator & ForwardList<Object>::iterator::operator++(){
+    iterator::current = iterator::current->mpNext;
+    return *this;
+}
+
+template<class Object>
+typename ForwardList<Object>::iterator ForwardList<Object>::iterator::operator++( int ){
+    iterator ret( const_iterator::current );
+    const_iterator::current = const_iterator::current->mpNext;
+    return ret;
+}
+*/

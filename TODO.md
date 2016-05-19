@@ -12,7 +12,7 @@
 - [x] Operadores do Vector
 - [ ] Iteradores do Vector
 - [x] Métodos básicos do ForwardList
-- [ ] Operadores do ForwardList
+- [x] Operadores do ForwardList
 - [ ] Iteradores do ForwardList
 - [x] Métodos básicos da List
 - [ ] Operadores da List
@@ -22,8 +22,10 @@
 - [x] Construtores cópia e movimento (Vector)
 - [ ] Construtores cópia e movimento (ForwardList)
 - [ ] Construtores cópia e movimento (List)
-- [ ] Verificar como é o construtor padrão do ForwardList
+- [x] Verificar como é o construtor padrão do ForwardList
 - [ ] Comentar tudo
+- [ ] Corrigir as mensagens de erro
+- [ ] Achar como jogar bad_allocs de maneira legal
 
 ## TODO:
 - [x] Testar os construtores cópia e movimento do Vector.

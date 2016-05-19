@@ -94,7 +94,7 @@ void Vector<Object>::reserve( size_type new_capacity ){
 
 template <class Object>
 typename Vector<Object>::const_iterator Vector<Object>::cbegin() const{
-    
+
     return const_iterator( mpArray.get() );
     //return const_iterator( & mpArray[0] );
 }
@@ -108,14 +108,14 @@ typename Vector<Object>::const_iterator Vector<Object>::cend() const{
 
 template <class Object>
 typename Vector<Object>::iterator Vector<Object>::begin() const{
-    
+
     return iterator( mpArray.get() ); // return * ou &?
     //return iterator( & mpArray[0] ); // return * ou &?
 }
 
 template <class Object>
 typename Vector<Object>::iterator Vector<Object>::end() const{
-    
+
     return iterator( mpArray.get() + miSize );
     //return iterator( & mpArray[miSize] );
 
@@ -185,10 +185,14 @@ typename Vector<Object>::iterator Vector<Object>::iterator::operator--(int){
 }
 
 template <class Object>
-Object & Vector<Object>::iterator::operator*(){
+const Object & Vector<Object>::iterator::operator*() const{
     return * const_iterator::m_ptr;
 }
 
+template <class Object>
+Object & Vector<Object>::iterator::operator*(){
+    return * const_iterator::m_ptr;
+}
 
 // Funções somente para debug
 template < class Object >
