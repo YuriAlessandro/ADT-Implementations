@@ -1,12 +1,122 @@
+/*!
+ *  @mainpage Vector
+ *  @author Gustavo Araújo e Yuri Alessandro Martins
+ *  @copyright Copyright &copy; 2016. All rights reserved.
+ *  @version 1.0
+ *
+ *  @file List.inl
+ *  @brief Implementations File
+ *
+ *  File with the List implementations
+ */
+
+
 template<class Object>
 List<Object>::List(){
-    mpHead = new SLLNode();
-    mpTail = new SLLNode();
-
+    try{
+        mpHead = new DLLNode;
+        mpTail = new DLLNode;
+    }catch ( std::bad_alloc e ){
+        throw e;
+    }
+    
     mpHead->mpNext = mpTail;
     mpTail->mpBefore = mpHead;
 
     miSize = 0;
+}
+
+template<class Object>
+List<Object>::List( const List & _vec ){
+    miSize = _vec.miSize;
+    
+    try{
+        mpHead = new DLLNode;
+        mpTail = new DLLNode;
+    }catch ( std::bad_alloc e ){
+        throw e;
+    }
+    
+    mpHead->mpNext = mpTail;
+    mpTail->mpBefore = mpHead;
+    
+    DLLNode * work = mpHead;
+    
+    auto it = _vec.cbegin();
+    it++;
+    
+    
+    for( auto it = _vec.cbegin(); it != _vec.cend(); it++ ){
+        try{
+            work->mpNext = new DLLNode( *it, nullptr, work );
+            work = work->mpNext;
+        }catch( std::bad_alloc e ){
+            throw e;
+        }
+    }
+    
+    work->mpNext = mpTail;
+    mpTail->mpBefore = work;
+}
+
+template<class Object>
+List<Object>::List( List && _vec ){
+    miSize = _vec.miSize;
+    _vec.miSize = 0;
+    
+    try{
+        mpHead = new DLLNode( Object(), _vec.mpHead->mpNext, nullptr );
+        mpTail = new DLLNode( Object(), nullptr, _vec.mpTail->mpBefore );
+    }catch ( std::bad_alloc e ){
+        throw e;
+    }
+    
+    _vec.mpTail->mpBefore->mpNext = mpTail;
+    
+    _vec.mpHead->mpNext = _vec.mpTail;
+    _vec.mpTail->mpBefore = _vec.mpHead;
+}
+
+template<class Object>
+List<Object> & List<Object>::operator= ( const List & _vec ){
+    
+    miSize = _vec.miSize;
+    
+    this->clear();
+    
+    DLLNode * work = mpHead;
+    
+    for( auto it = _vec.cbegin(); it != _vec.cend(); it++ ){
+        try{
+            work->mpNext = new DLLNode( *it, nullptr, work );
+            work = work->mpNext;
+        }catch( std::bad_alloc e ){
+            throw e;
+        }
+    }
+    
+    work->mpNext = mpTail;
+    mpTail->mpBefore = work;
+    
+    return *this;
+    
+}
+
+template<class Object>
+List<Object> & List<Object>::operator= ( List && _vec ){
+    this->clear();
+    
+    miSize = _vec.miSize;
+    _vec.miSize = 0;
+    
+    mpHead->mpNext = _vec.mpHead->mpNext;
+    mpTail->mpBefore = _vec.mpTail->mpBefore;
+    _vec.mpTail->mpBefore->mpNext = mpTail;
+    
+    _vec.mpHead->mpNext = _vec.mpTail;
+    _vec.mpTail->mpBefore = _vec.mpHead;
+
+    return *this;
 }
 
 template<class Object>
@@ -23,7 +133,7 @@ size_type List<Object>::size() const{
 
 template<class Object>
 void List<Object>::clear(){
-    SLLNode * work;
+    DLLNode * work;
     while ( mpHead->mpNext != mpTail ){
         mpHead->mpNext->miData.~Object();
 
@@ -31,6 +141,8 @@ void List<Object>::clear(){
         delete mpHead->mpNext;
         mpHead->mpNext = work;
     }
+    
+    mpTail->mpBefore = mpHead;
     miSize = 0;
 }
 
@@ -39,12 +151,11 @@ bool List<Object>::empty() const{
     return ( mpHead->mpNext == mpTail );
 }
 
-//TALVEZ ESTEJA ERRADA EM 'mpTail->mpBefore = tmp;'
 template<class Object>
 void List<Object>::push_back( const Object & x ){
-    SLLNode * tmp;
+    DLLNode * tmp;
     try{
-        tmp = new SLLNode(x, mpTail, mpTail->mpBefore);
+        tmp = new DLLNode(x, mpTail, mpTail->mpBefore);
     }catch (const std::bad_alloc & e){
         throw e;
     }
@@ -54,15 +165,14 @@ void List<Object>::push_back( const Object & x ){
     miSize++;
 }
 
-// MUITO LOUCO, JESUS!!!
 template<class Object>
 void List<Object>::pop_back(){
     if ( empty() )
-        throw std::out_of_range("Nem sei se é esse erro");
+        throw std::out_of_range("[pop_back]: The list is empty, there is nothing to be removed.");
     else{
-        SLLNode * work = mpTail->mpBefore;
-        mpTail->mpBefore = mpTail->mpBefore->mpBefore;  // CERTO
-        work->mpBefore->mpNext = mpTail;                // CERTO
+        DLLNode * work = mpTail->mpBefore;
+        mpTail->mpBefore = mpTail->mpBefore->mpBefore;  
+        work->mpBefore->mpNext = mpTail;                
 
         work->miData.~Object();
         delete work;
@@ -73,7 +183,7 @@ void List<Object>::pop_back(){
 template<class Object>
 const Object & List<Object>::back() const{
     if ( empty() )
-        throw std::out_of_range("Nem sei se é esse erro");
+        throw std::out_of_range("[back]: The list is empty, there are no elements in the \"back\"");
     else
         return mpTail->mpBefore->miData;
 }
@@ -81,18 +191,14 @@ const Object & List<Object>::back() const{
 template<class Object>
 const Object & List<Object>::front() const{
     if( empty() )
-        throw std::out_of_range("Nem sei se é esse erro");
+        throw std::out_of_range("[front]: The list is empty, there are no elements in the \"front\"");
     else
         return mpHead->mpNext->miData;
 }
 
-/**
- * \brief Todos os elementos da lista passam a ter o valor de _x
- * \param Valor que será atribuído a todos os objetos.
-*/
 template<class Object>
 void List<Object>::assign( const Object & _x ){
-    SLLNode * work = mpHead->mpNext;
+    DLLNode * work = mpHead->mpNext;
     while( work != mpTail ){
         work->miData.~Object();
         work->miData = _x;
@@ -102,9 +208,9 @@ void List<Object>::assign( const Object & _x ){
 
 template<class Object>
 void List<Object>::push_front( const Object & x ) {
-    SLLNode * tmp;
+    DLLNode * tmp;
     try{
-        tmp = new SLLNode(x, mpHead->mpNext, mpHead);
+        tmp = new DLLNode(x, mpHead->mpNext, mpHead);
     }catch (const std::bad_alloc & e){
         throw e;
     }
@@ -116,7 +222,10 @@ void List<Object>::push_front( const Object & x ) {
 
 template<class Object>
 void List<Object>::pop_front() {
-    SLLNode * work = mpHead->mpNext;
+    if( empty() )
+        throw std::out_of_range("[pop_front]: The list is empty, there are no elements in the \"front\"");
+    
+    DLLNode * work = mpHead->mpNext;
     mpHead->mpNext = work->mpNext;
     work->mpNext->mpBefore = mpHead;
 
@@ -156,20 +265,17 @@ typename List<Object>::const_iterator List<Object>::cend() const{
     return const_iterator( mpTail );
 }
 
-/////////////////////////////////////////
-/////////////////////////////////////////
-/////////////////////////////////////////
-/////////////////////////////////////////
+/** Métodos com iteradores: */
 
 
 template<class Object>
 typename List<Object>::iterator List<Object>::insert(
     typename List<Object>::iterator pos, const Object & _x ){
     
-    SLLNode * work;
+    DLLNode * work;
     
     try{
-        work = new SLLNode( _x, pos.current, pos.current->mpBefore );
+        work = new DLLNode( _x, pos.current, pos.current->mpBefore );
     }catch( const std::bad_alloc & e ){
         throw e;
     }
@@ -191,24 +297,24 @@ typename List<Object>::iterator List<Object>::insert(
 
 }
 
-
+*/
 
 template <class Object>
 typename List<Object>::iterator List<Object>::insert(
     typename List<Object>::const_iterator pos, std::initializer_list<Object> ilist ){
     
-    SLLNode * work;
+    DLLNode * work;
 
     for ( auto element : ilist ){
         
         try{
-            work = new SLLNode( element, pos.current, pos.current->mpBefore );
+            work = new DLLNode( element, pos.current, pos.current->mpBefore );
         }catch( const std::bad_alloc & e ){
             throw e;
         }
         
+        work->mpNext->mpBefore = work;
         work->mpBefore->mpNext = work;
-        pos.current->mpBefore = work;
         
         miSize++;
         
@@ -217,7 +323,7 @@ typename List<Object>::iterator List<Object>::insert(
     return iterator( work );
 
 }
-*/
+
 
 
 template <class Object>
@@ -237,13 +343,29 @@ typename List<Object>::iterator List<Object>::erase(
     return ret;
 }
 
-/*
 template <class Object>
 typename List<Object>::iterator List<Object>::erase(
     typename List<Object>::iterator first, typename List<Object>::iterator last ){
     
+    DLLNode * work;
+    
+    while( first != last ){
+        work = first.current;
+        first++;
+        
+        work->mpNext->mpBefore = work->mpBefore;
+        work->mpBefore->mpNext = work->mpNext;
+
+        work->miData.~Object();
+        delete work;
+        
+        miSize--;
+    }
+    
+    return first;
 }
 
+/*
 
 template <class Object>
 template <typename InItr>
@@ -259,20 +381,16 @@ void List<Object>::assign( std::initializer_list<T> ilist ){
 */
 
 
-////////////////
-// ITERADORES //
-////////////////
+/** Operadores dos iteradores: */
 
 template<class Object>
 const Object & List<Object>::const_iterator::operator*() const{
     return current->miData;
 }
 
-// Tratamento de erro necessário?
 template<class Object>
 typename List<Object>::const_iterator & List<Object>::const_iterator::operator++(){
-    if ( current != mpTail ) current = current->mpNext;
-    else current = mpHead->mpNext;
+    current = current->mpNext;
     
     return *this;
 }
@@ -280,17 +398,14 @@ typename List<Object>::const_iterator & List<Object>::const_iterator::operator++
 template<class Object>
 typename List<Object>::const_iterator List<Object>::const_iterator::operator++( int ){
     const_iterator ret( current );
-    
-    if ( current != mpTail ) current = current->mpNext;
-    else current = mpHead->mpNext;
+    current = current->mpNext;
     
     return ret;
 }
 
 template<class Object>
 typename List<Object>::const_iterator & List<Object>::const_iterator::operator--(){
-    if ( current != mpHead->mpNext ) current = current->mpBefore;
-    else current = mpTail;
+    current = current->mpBefore;
     
     return *this;
 }
@@ -298,9 +413,7 @@ typename List<Object>::const_iterator & List<Object>::const_iterator::operator--
 template<class Object>
 typename List<Object>::const_iterator List<Object>::const_iterator::operator--( int ){
     const_iterator ret( current );
-    
-    if ( current != mpHead->mpNext ) current = current->mpBefore;
-    else current = mpTail;
+    current = current->mpBefore;
     
     return ret;
 }

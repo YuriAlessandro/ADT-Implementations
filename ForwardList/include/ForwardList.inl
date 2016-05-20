@@ -12,10 +12,103 @@
 
 template<class Object>
 ForwardList<Object>::ForwardList(){
-    mpTail = new SLLNode( Object(), nullptr );
-    mpHead = new SLLNode( Object(), mpTail );
+    try{
+        mpTail = new SLLNode;
+        mpHead = new SLLNode( Object(), mpTail );
+    }catch ( std::bad_alloc e ){
+        throw e;
+    }
     miSize = 0;
 }
+
+template<class Object>
+ForwardList<Object>::ForwardList( const ForwardList & _vec ){
+    miSize = _vec.miSize;
+    
+    try{
+        mpHead = new SLLNode;
+        mpTail = new SLLNode;
+    }catch ( std::bad_alloc e ){
+        throw e;
+    }
+    
+    SLLNode * work = mpHead;
+    
+    for( auto it = _vec.cbegin(); it != _vec.cend(); it++ ){
+        try{
+            work->mpNext = new SLLNode( *it, nullptr );
+            work = work->mpNext;
+        }catch( std::bad_alloc e ){
+            throw e;
+        }
+    }
+    
+    work->mpNext = mpTail;
+    
+}
+
+template<class Object>
+ForwardList<Object>::ForwardList( ForwardList && _vec ){
+    miSize = _vec.miSize;
+    _vec.miSize = 0;
+    
+    SLLNode * last = _vec.mpHead;
+    while ( last->mpNext != _vec.mpTail )
+        last = last->mpNext;
+    
+    try{
+        mpHead = new SLLNode( Object(), _vec.mpHead->mpNext );
+        mpTail = new SLLNode;
+    }catch ( std::bad_alloc e ){
+        throw e;
+    }
+    
+    last->mpNext = mpTail;
+    
+    _vec.mpHead->mpNext = _vec.mpTail;
+}
+
+template<class Object>
+ForwardList<Object> & ForwardList<Object>::operator= ( const ForwardList & _vec ){
+    miSize = _vec.miSize;
+    
+    this->clear();
+    
+    SLLNode * work = mpHead;
+    
+    for( auto it = _vec.cbegin(); it != _vec.cend(); it++ ){
+        try{
+            work->mpNext = new SLLNode( *it, nullptr );
+            work = work->mpNext;
+        }catch( std::bad_alloc e ){
+            throw e;
+        }
+    }
+    
+    work->mpNext = mpTail;
+    
+    return *this;
+}
+
+template<class Object>
+ForwardList<Object> & ForwardList<Object>::operator= ( ForwardList && _vec ){
+    this->clear();
+    
+    miSize = _vec.miSize;
+    _vec.miSize = 0;
+    
+    SLLNode * last = _vec.mpHead;
+    while ( last->mpNext != _vec.mpTail )
+        last = last->mpNext;
+    
+    mpHead = _vec.mpHead->mpNext;
+    last->mpNext = mpTail;
+    
+    _vec.mpHead->mpNext = _vec.mpTail;
+
+    return *this;
+}
+
 
 template<class Object>
 ForwardList<Object>::~ForwardList(){
@@ -68,11 +161,10 @@ void ForwardList<Object>::push_back( const Object & _x ){
     miSize++;
 }
 
-// Tem que dar ~Object()
 template<class Object>
 void ForwardList<Object>::pop_back(){
     if( empty() )
-        throw std::out_of_range("Não tem nada pra popbackar aqui.");
+        throw std::out_of_range("The list is empty, there is nothing to be removed.");
     else{
         SLLNode * work = mpHead;
         SLLNode * _tail = mpHead->mpNext;
@@ -93,7 +185,7 @@ void ForwardList<Object>::pop_back(){
 template<class Object>
 const Object & ForwardList<Object>::front() const{
     if ( empty() ){
-        throw std::out_of_range("[front]: Nem sei se é esse erro");
+        throw std::out_of_range("[front]: The list is empty, there are no elements in the \"front\"");
     }
     return mpHead->mpNext->miData;
 }
@@ -101,7 +193,7 @@ const Object & ForwardList<Object>::front() const{
 template<class Object>
 const Object & ForwardList<Object>::back() const{
     if ( empty() )
-        throw std::out_of_range("Nem sei se é esse erro");
+        throw std::out_of_range("[back]: The list is empty, there are no elements in the \"back\"");
 
     SLLNode * _tail = mpHead->mpNext;
 
@@ -139,7 +231,7 @@ void ForwardList<Object>::push_front( const Object & _x ){
 template<class Object>
 void ForwardList<Object>::pop_front(){
     if( empty() )
-        throw std::out_of_range("[pop_front]: Nothing to pop here, sir.");
+        throw std::out_of_range("[pop_front]: The list is empty, there is nothing to be removed.");
     else{
     	SLLNode * work = mpHead->mpNext->mpNext;
 
@@ -182,9 +274,7 @@ typename ForwardList<Object>::const_iterator ForwardList<Object>::cend( ) const{
     return const_iterator( mpTail );
 }
 
-////////////////////////
-////////////////////////
-////////////////////////
+/** Métodos com iteradores: */
 
 template<class Object>
 typename ForwardList<Object>::iterator ForwardList<Object>::insert_after(
@@ -273,16 +363,13 @@ typename ForwardList<Object>::const_iterator ForwardList<Object>::find(const Obj
     return work;
 }
 
-////////////////
-// ITERADORES //
-////////////////
+/** Operadores dos Iteradores: */
 
 template<class Object>
 const Object & ForwardList<Object>::const_iterator::operator*() const{
     return current->miData;
 }
 
-// Tratamento de erro necessário?
 template<class Object>
 typename ForwardList<Object>::const_iterator & ForwardList<Object>::const_iterator::operator++(){
     current = current->mpNext;
