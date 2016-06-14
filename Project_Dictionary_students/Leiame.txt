@@ -1,0 +1,12 @@
+Gustavo Araújo Carvalho
+
+Para compilar:
+g++ -Wall -std=c++11 -I include/ src/drive_arraylist.cpp -o ex
+
+( Makefile não funciona )
+
+
+Detalhes:
+As funções de Min e Max funcionam assumindo que existe ao menos 1 elemento no dicionário pois retornam uma chave.
+Poderiam ser facilmente modificicados para retornar booleanos assim como as outras funções, mas decidi não alterar
+suas assinaturas.
