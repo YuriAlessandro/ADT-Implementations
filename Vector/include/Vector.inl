@@ -1,11 +1,65 @@
-/**
- *  \file Vector.inl
- *  \brief Vector implementations
+/*!
+ *  @mainpage Vector
+ *  @author Gustavo Araújo e Yuri Alessandro Martins
+ *  @copyright Copyright &copy; 2016. All rights reserved.
+ *  @version 1.0
+ *
+ *  @file Vector.inl
+ *  @brief Implementations File
+ *
+ *  File with the Vector implementations
  */
+
 
 template <class Object>
 size_type Vector<Object>::size() const{
     return miSize;
+}
+
+template <class Object>
+Vector<Object>::Vector( size_type _newSize ) : miCapacity (_newSize), miSize( 0 ) {
+    mpArray = std::unique_ptr<Object[]>( new Object[ _newSize ] );
+}
+
+template <class Object>
+Vector<Object>::Vector( const Vector & _vec ){
+    miCapacity = _vec.miCapacity;
+    miSize = _vec.miSize;
+    mpArray = std::unique_ptr<Object[]>( new Object[ miCapacity ] );
+
+    for ( auto i = 0; i < miSize; i++ )
+        mpArray[i] = _vec.mpArray[i];
+}
+
+template <class Object>
+Vector<Object>::Vector( Vector && _vec ){
+    miCapacity = _vec.miCapacity;
+    miSize = _vec.miSize;
+    mpArray = std::move( _vec.mpArray );
+}
+
+template <class Object>
+Vector<Object> & Vector<Object>::operator= ( const Vector & _vec ){
+    if ( this != &_vec )
+    {
+        miCapacity = _vec.miCapacity;
+        miSize = _vec.miSize;
+        mpArray.reset();
+        for ( auto i = 0; i < miSize; i++ )
+            mpArray[i] = _vec.mpArray[i];
+    }
+    return *this;
+}
+
+template <class Object>
+Vector<Object> & Vector<Object>::operator= ( Vector && _vec ){
+    if ( this != &_vec )
+    {
+        miCapacity = _vec.miCapacity;
+        miSize = _vec.miSize;
+        mpArray = std::move( _vec.mpArray );
+    }
+    return *this;
 }
 
 template <class Object>
@@ -88,9 +142,7 @@ void Vector<Object>::reserve( size_type new_capacity ){
     miCapacity = new_capacity;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////     ITERATORS      ////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
+/** Métodos com iteradores: */
 
 template <class Object>
 typename Vector<Object>::const_iterator Vector<Object>::cbegin() const{
@@ -120,6 +172,8 @@ typename Vector<Object>::iterator Vector<Object>::end() const{
     //return iterator( & mpArray[miSize] );
 
 }
+
+/** Operadores dos iteradores: */
 
 template <class Object>
 typename Vector<Object>::const_iterator & Vector<Object>::const_iterator::operator++(){
@@ -200,6 +254,7 @@ Object * Vector<Object>::data() const{
     return mpArray.get();
 }
 
+/*
 template < class Object >
 void Vector<Object>::superDebuggator() const{
     std::cout << "Ponteiro hear de elto: " << mpArray.get() << std::endl;
@@ -207,3 +262,4 @@ void Vector<Object>::superDebuggator() const{
     std::cout << "Ponteiro hear de eu: " << & mpArray[0] << std::endl;
     std::cout << "Ponteiro end de eu: " << & mpArray[miSize] << std::endl;
 }
+*/
